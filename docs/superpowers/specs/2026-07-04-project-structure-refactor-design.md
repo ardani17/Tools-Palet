@@ -12,7 +12,7 @@ drawing di atas chart (mirip TradingView). Semua drawing dirender ke canvas bitm
 (`CCanvas`) melalui rantai inheritance:
 `CDrawingEngine` → `CSidebarLayout` → `CChartEventHandler` → `CToolsSidebar`.
 
-Saat ini seluruh source (1 file `.mq5`, 20 file `.mqh`, 1 binary `.ex5`) berada
+Saat ini seluruh source (1 file `.mq5`, 19 file `.mqh`, 1 binary `.ex5`) berada
 flat di root repo tanpa struktur direktori. Branch `main` dan `development` sengaja
 dikosongkan menunggu struktur dirapikan sebelum menerima merge dari `beta`.
 
@@ -171,7 +171,7 @@ cara install via junction, cara compile di MetaEditor, dan branch workflow
 
 ### `scripts/deploy-mt5.ps1`
 
-- Parameter: `-TerminalPath` (path folder `MQL5` di data terminal MT5).
+- Parameter: `-TerminalDataPath` (path folder data terminal MT5 yang berisi `MQL5`).
 - Membuat junction: `MQL5\Experts\ToolsPalet` → `<repo>\src`.
 - Validasi: cek folder target ada, cek junction lama, beri pesan jelas + contoh cara cari path terminal MT5.
 

@@ -107,10 +107,10 @@ git mv "ToolsPalette_Primitives.mqh" "src/primitives/ToolsPalette_Primitives.mqh
 Run:
 ```powershell
 Write-Host "Root .mqh/.mq5 (harus 0):"; (Get-ChildItem -File | Where-Object { $_.Extension -in ".mqh",".mq5" }).Count
-Write-Host "src total .mqh/.mq5 (harus 21):"; (Get-ChildItem -Recurse src -File | Where-Object { $_.Extension -in ".mqh",".mq5" }).Count
+Write-Host "src total .mqh/.mq5 (harus 20):"; (Get-ChildItem -Recurse src -File | Where-Object { $_.Extension -in ".mqh",".mq5" }).Count
 git status --short
 ```
-Expected: root = `0`, src total = `21`, `git status` menampilkan 21 entri `R` (renamed).
+Expected: root = `0`, src total = `20`, `git status` menampilkan 20 entri `R` (renamed).
 
 - [ ] **Step 10: Commit**
 
@@ -119,7 +119,7 @@ Run:
 git add -A
 git commit -m "refactor: move source into src/ layered folders (#1)"
 ```
-Expected: commit sukses, 21 file renamed.
+Expected: commit sukses, 20 file renamed.
 
 ---
 
@@ -565,7 +565,7 @@ Get-ChildItem -Recurse src -Include *.mqh,*.mq5 -File | ForEach-Object {
 }
 Write-Host "Broken includes (harus 0): $bad"
 ```
-Expected: 21 file source di `src/`, root tidak ada `.mqh/.mq5/.ex5`, broken includes = `0`.
+Expected: 20 file source di `src/`, root tidak ada `.mqh/.mq5/.ex5`, broken includes = `0`.
 
 - [ ] **Step 2: [USER] Compile di MetaEditor**
 
