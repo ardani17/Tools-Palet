@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_PROPERTIES_MQH
 
 //--- Pull in the Tools header so TOOL_TYPE and DrawnObject are visible
-#include "ToolsPalette_Tools.mqh"
+#include "../core/ToolsPalette_Tools.mqh"
 
 //+------------------------------------------------------------------+
 //| Widget-type enum - drives which UI widget renders each property  |

@@ -16,8 +16,8 @@
 #include "ToolsPalette_Sidebar.mqh"
 
 //--- Ribbon and Settings classes are pulled in just before CChartEventHandler so the handler sees fully-declared base classes
-#include "ToolsPalette_Ribbon.mqh"
-#include "ToolsPalette_Settings.mqh"
+#include "../ui/ToolsPalette_Ribbon.mqh"
+#include "../ui/ToolsPalette_Settings.mqh"
 
 //+------------------------------------------------------------------+
 //| CChartEventHandler routes all chart events into sub-handlers     |

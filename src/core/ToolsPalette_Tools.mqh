@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_TOOLS_MQH
 
 //--- Pull in CAnnotationTools (the parent in the tool-rendering chain)
-#include "ToolsPalette_Annotations.mqh"
+#include "../tools/ToolsPalette_Annotations.mqh"
 
 //+------------------------------------------------------------------+
 //| Icon definition: font name + character-code pair                 |
@@ -2442,10 +2442,10 @@ bool CDrawingEngine::DeselectAll()
   }
 
 //--- Pull in the CDrawingEngine implementation files (Edit / Interact / Render / Properties)
-#include "ToolsPalette_Engine_Edit.mqh"
-#include "ToolsPalette_Engine_Interact.mqh"
-#include "ToolsPalette_Engine_Render.mqh"
-#include "ToolsPalette_Engine_Properties.mqh"
+#include "../engine/ToolsPalette_Engine_Edit.mqh"
+#include "../engine/ToolsPalette_Engine_Interact.mqh"
+#include "../engine/ToolsPalette_Engine_Render.mqh"
+#include "../engine/ToolsPalette_Engine_Properties.mqh"
 
 #endif // TOOLS_PALETTE_TOOLS_MQH
 //+------------------------------------------------------------------+

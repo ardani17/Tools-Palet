@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_PROPERTY_WIDGETS_MQH
 
 //--- Pull in the Sidebar header (transitively pulls Primitives + Tools)
-#include "ToolsPalette_Sidebar.mqh"
+#include "../core/ToolsPalette_Sidebar.mqh"
 
 //+------------------------------------------------------------------+
 //| WidgetFillCircleAA - anti-aliased filled circle (4x4 supersample)|

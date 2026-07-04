@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_RIBBON_MQH
 
 //--- Pull in the Sidebar (base class), property descriptor system, and widget renderers
-#include "ToolsPalette_Sidebar.mqh"
+#include "../core/ToolsPalette_Sidebar.mqh"
 #include "ToolsPalette_Properties.mqh"
 #include "ToolsPalette_PropertyWidgets.mqh"
 

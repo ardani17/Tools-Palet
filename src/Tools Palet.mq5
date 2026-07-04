@@ -9,7 +9,7 @@
 #property strict
 
 //--- Pull in the sidebar shell header that defines the CToolsSidebar class
-#include "ToolsPalette_Shell.mqh"
+#include "core/ToolsPalette_Shell.mqh"
 
 //+------------------------------------------------------------------+
 //| Global Variables                                                 |

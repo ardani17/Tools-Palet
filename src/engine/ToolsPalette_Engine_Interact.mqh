@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_ENGINE_INTERACT_MQH
 
 //--- Pull in CDrawingEngine class declaration (Tools.mqh include guard handles double-load)
-#include "ToolsPalette_Tools.mqh"
+#include "../core/ToolsPalette_Tools.mqh"
 
 //+------------------------------------------------------------------+
 //| CDrawingEngine method bodies for the pointer-mode interaction    |

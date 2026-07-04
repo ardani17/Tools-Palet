@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_ENGINE_PROPERTIES_MQH
 
 //--- Pull in the Tools header so CDrawingEngine and DrawnObject are visible to the bodies below
-#include "ToolsPalette_Tools.mqh"
+#include "../core/ToolsPalette_Tools.mqh"
 
 //+------------------------------------------------------------------+
 //| Split "<prefix>:N:field" into (prefix, N, field) for level props |

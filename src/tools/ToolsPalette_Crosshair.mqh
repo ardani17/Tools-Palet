@@ -13,7 +13,7 @@
 #define TOOLS_PALETTE_CROSSHAIR_MQH
 
 //--- Pull in the primitives layer (BlendPixelSet, DrawBresenhamLine, CThemeManager)
-#include "ToolsPalette_Primitives.mqh"
+#include "../primitives/ToolsPalette_Primitives.mqh"
 
 //+------------------------------------------------------------------+
 //| Crosshair and magnifier configuration inputs                     |
