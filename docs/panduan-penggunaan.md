@@ -417,8 +417,7 @@ Hanya terlihat selama EA Tools Palette aktif di chart tersebut.
 | Dokumen | Isi |
 |---------|-----|
 | [compile.md](compile.md) | Deploy, compile, verifikasi |
-| [README](../README.md) | Arsitektur & branch workflow |
-| `docs/superpowers/specs/2026-07-04-drawing-persistence-design.md` | Spesifikasi persistensi |
+| [README](../README.md) | Arsitektur & ringkasan proyek |
 | `src/core/ToolsPalette_Tools.mqh` | Definisi alat & kategori |
 | `src/storage/ToolsPalette_Storage.mqh` | Implementasi penyimpanan file |
 
