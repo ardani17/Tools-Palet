@@ -888,6 +888,8 @@ void CToolsSidebar::InitDefaults()
    //--- Drawing engine state - object store + in-progress placement
    m_drawnObjectCounter      = 0;
    m_drawnObjectCount        = 0;
+   m_drawingsDirty           = false;
+   m_drawingsDirtyTick       = 0;
    m_toolDrawingClickCount   = 0;
    m_drawPoint1Time          = 0;
    m_drawPoint2Time          = 0;

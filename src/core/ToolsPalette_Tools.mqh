@@ -666,6 +666,9 @@ protected:
    DrawnObject m_drawnObjects[];
    int         m_drawnObjectCount;
    int         m_drawnObjectCounter;
+   //--- Persistence dirty-flag + last-change tick (drives debounced flush; see ToolsPalette_Storage.mqh)
+   bool        m_drawingsDirty;
+   uint        m_drawingsDirtyTick;
    //--- In-progress placement state (click counter + the 3 anchor points captured per click)
    int         m_toolDrawingClickCount;
    datetime    m_drawPoint1Time;
@@ -771,6 +774,13 @@ protected:
                                datetime t2, double p2, datetime t3, double p3, color objColor,
                                bool useMemory = true);
    void         RemoveDrawnObject(int id);
+   //--- Drawing persistence (impl in src/storage/ToolsPalette_Storage.mqh)
+   string       DrawingsFilePath();
+   void         MarkDrawingsDirty();
+   void         MaybeFlushDrawings();
+   void         SaveDrawings();
+   bool         RestoreDrawings();
+   void         MaterializeLoadedObject(const string &keys[], const string &vals[], int &maxId);
    void         ClearAllDrawnObjects();
    void         ApplyToolDefaults(int objId);
    //--- Per-tool style memory (captures/applies style between same-tool placements)
@@ -2446,6 +2456,9 @@ bool CDrawingEngine::DeselectAll()
 #include "../engine/ToolsPalette_Engine_Interact.mqh"
 #include "../engine/ToolsPalette_Engine_Render.mqh"
 #include "../engine/ToolsPalette_Engine_Properties.mqh"
+
+//--- Drawing persistence methods (defined after the class is fully declared)
+#include "..\storage\ToolsPalette_Storage.mqh"
 
 #endif // TOOLS_PALETTE_TOOLS_MQH
 //+------------------------------------------------------------------+
