@@ -1360,7 +1360,7 @@ void CDrawingEngine::HandlePointerDragRelease()
    m_isDraggingObject = false;
    m_draggedHandleIdx = -1;
    //--- Redraw to restore the hidden-during-drag handle and any prompt visibility
-   if(wasDragging) RedrawAllObjects();
+   if(wasDragging) { MarkDrawingsDirty(); RedrawAllObjects(); }
    //--- Do not restore chart scroll here; pointer mode keeps it locked until tool switch
   }
 

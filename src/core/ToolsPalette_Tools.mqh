@@ -1712,6 +1712,7 @@ int CDrawingEngine::AddDrawnObject(TOOL_TYPE toolType,
    //--- Bump the live count and (if requested) overlay any remembered style from prior placements
    m_drawnObjectCount++;
    if(useMemory) ApplyToolMemory(sz);
+   MarkDrawingsDirty();
    return m_drawnObjectCounter;
   }
 
@@ -1740,6 +1741,7 @@ void CDrawingEngine::RemoveDrawnObject(int id)
             m_selectedObjectId = -1;
             OnSelectionChanged(-1);
            }
+         MarkDrawingsDirty();
          //--- Re-render the canvas without the removed object
          RedrawAllObjects();
          return;
@@ -1767,6 +1769,7 @@ void CDrawingEngine::ClearAllDrawnObjects()
    m_canvasDrawings.Update();
    //--- Notify the ribbon about selection loss (if there was one)
    if(hadSelection) OnSelectionChanged(-1);
+   MarkDrawingsDirty();
   }
 
 //+------------------------------------------------------------------+

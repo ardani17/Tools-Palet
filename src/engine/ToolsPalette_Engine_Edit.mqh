@@ -851,8 +851,10 @@ void CDrawingEngine::CommitLabel()
    m_labelSelectionAnchor = -1;
    //--- Restore the chart keyboard control values captured at edit start
    EndKeyboardOverride();
-   //--- Stop the caret-blink timer
-   EventKillTimer();
+   //--- Re-arm the persistent heartbeat (do not kill it - it drives the persistence flush)
+   EventSetMillisecondTimer(500);
+   //--- Label text changed -> persist it
+   MarkDrawingsDirty();
    RedrawAllObjects();
   }
 
@@ -868,8 +870,8 @@ void CDrawingEngine::CancelLabel()
    m_labelSelectionAnchor = -1;
    //--- Restore the chart keyboard control values captured at edit start
    EndKeyboardOverride();
-   //--- Stop the caret-blink timer
-   EventKillTimer();
+   //--- Re-arm the persistent heartbeat (do not kill it - it drives the persistence flush)
+   EventSetMillisecondTimer(500);
    RedrawAllObjects();
   }
 

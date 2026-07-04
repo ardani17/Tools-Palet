@@ -349,6 +349,7 @@ bool CDrawingEngine::GetObjectProperty(int objId, string propId, string &outValu
 //+------------------------------------------------------------------+
 bool CDrawingEngine::SetObjectProperty(int objId, string propId, color value, bool preview)
   {
+   if(!preview) MarkDrawingsDirty();
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
@@ -497,6 +498,7 @@ bool CDrawingEngine::SetObjectProperty(int objId, string propId, color value, bo
 //+------------------------------------------------------------------+
 bool CDrawingEngine::SetObjectProperty(int objId, string propId, int value, bool preview)
   {
+   if(!preview) MarkDrawingsDirty();
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
@@ -754,6 +756,7 @@ bool CDrawingEngine::SetObjectProperty(int objId, string propId, int value, bool
 //+------------------------------------------------------------------+
 bool CDrawingEngine::SetObjectProperty(int objId, string propId, string value, bool preview)
   {
+   if(!preview) MarkDrawingsDirty();
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
@@ -843,6 +846,7 @@ bool CDrawingEngine::GetObjectProperty(int objId, string propId, bool &outValue)
 //+------------------------------------------------------------------+
 bool CDrawingEngine::SetObjectProperty(int objId, string propId, bool value, bool preview)
   {
+   if(!preview) MarkDrawingsDirty();
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
@@ -966,6 +970,7 @@ bool CDrawingEngine::GetObjectProperty(int objId, string propId, double &outValu
 //+------------------------------------------------------------------+
 bool CDrawingEngine::SetObjectProperty(int objId, string propId, double value, bool preview)
   {
+   if(!preview) MarkDrawingsDirty();
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
