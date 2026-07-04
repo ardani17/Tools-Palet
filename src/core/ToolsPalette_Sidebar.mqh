@@ -1,10 +1,10 @@
 ﻿//+------------------------------------------------------------------+
 //|                                         ToolsPalette_Sidebar.mqh |
-//|                           Copyright 2026, Allan Munene Mutiiria. |
-//|                                   https://t.me/Forex_Algo_Trader |
+//|                                            Copyright 2026, Om J. |
+//|                                               https://t.me/HZFXI |
 //+------------------------------------------------------------------+
-#property copyright "Copyright 2026, Allan Munene Mutiiria."
-#property link "https://t.me/Forex_Algo_Trader"
+#property copyright "Copyright 2026, Om J."
+#property link "https://t.me/HZFXI"
 #property version "1.00"
 #property strict
 
