@@ -130,17 +130,32 @@ and pitchfork median/outer/inner style fields.
 
 ## Save Flow (hybrid, crash-safe)
 
-1. Every mutation path calls `MarkDrawingsDirty()`:
+> **Planning refinement (2026-07-04):** two facts about the existing code shape this flow.
+> (1) The chart timer is **not** always running — it is armed only during label edits
+> (`EventSetMillisecondTimer(500)` in `StartLabelEdit`, killed on commit/cancel), so a
+> persistent heartbeat timer must be installed for a debounced flush to fire when idle.
+> (2) `SetObjectProperty` already carries a `preview` flag (`true` during a live
+> slider/opacity drag, `false` on commit), so marking dirty only when `!preview` gives
+> natural coalescing — no per-frame thrash from property drags. Object *move* drags update
+> anchors directly and are marked dirty once on mouse-up release, not per frame.
+
+1. Every **committed** mutation calls `MarkDrawingsDirty()` (sets a flag + records
+   `GetTickCount()`):
    - `CDrawingEngine::AddDrawnObject()`
    - `CDrawingEngine::RemoveDrawnObject()`
-   - edit / drag **commit** points in `ToolsPalette_Engine_Edit.mqh` /
-     `ToolsPalette_Engine_Interact.mqh` (mark dirty on commit, not on every mouse-move frame)
-   - property setters in `ToolsPalette_Engine_Properties.mqh`
-2. `CToolsSidebar::OnTimer()` (already firing for the label cursor blink) checks the dirty
-   flag; if set and ≥ ~1s since the last change, it calls `SaveDrawings()` and clears the
-   flag (debounce prevents disk thrash during a drag).
+   - `CDrawingEngine::ClearAllDrawnObjects()` (persists the cleared/empty state)
+   - `CDrawingEngine::CommitLabel()` (label text change)
+   - the mouse-up drag-release block in `ToolsPalette_Engine_Interact.mqh`
+     (`if(wasDragging)`) — one mark per drag, not per move frame
+   - each `SetObjectProperty` overload in `ToolsPalette_Engine_Properties.mqh`,
+     guarded by `if(!preview)` so live drags don't mark
+2. A **persistent** `EventSetMillisecondTimer(500)` is installed in `CToolsSidebar::Init()`.
+   `CToolsSidebar::OnTimer()` calls `MaybeFlushDrawings()`: if dirty and
+   `GetTickCount() - dirtyTick >= ~400ms`, it calls `SaveDrawings()` and clears the flag.
+   The label-edit teardown (`CommitLabel`/`CancelLabel`) re-arms the heartbeat instead of
+   killing it, so the timer stays alive after an edit ends.
 3. `CToolsSidebar::Destroy()` (invoked from `OnDeinit`, including `REASON_CHARTCHANGE`)
-   performs a final `SaveDrawings()` if still dirty.
+   performs a final `SaveDrawings()` if still dirty, then kills the timer.
 4. **Atomic write:** serialize to `<file>.tmp`, then `FileMove(..., FILE_REWRITE)` over the
    real file so an interrupted write cannot corrupt the store.
 
@@ -175,10 +190,10 @@ and pitchfork median/outer/inner style fields.
 |------|--------|
 | `src/storage/ToolsPalette_Storage.mqh` | **New** — serializer, parser, atomic file I/O |
 | `src/core/ToolsPalette_Tools.mqh` | Declare `SaveDrawings/RestoreDrawings/MarkDrawingsDirty` + dirty-flag state on `CDrawingEngine`; call `MarkDrawingsDirty()` in `AddDrawnObject`/`RemoveDrawnObject`; include storage module |
-| `src/core/ToolsPalette_Shell.mqh` | `Init()` → `RestoreDrawings()`; `OnTimer()` → debounced flush; `Destroy()` → final flush |
-| `src/engine/ToolsPalette_Engine_Edit.mqh` | `MarkDrawingsDirty()` on drag/edit commit |
-| `src/engine/ToolsPalette_Engine_Interact.mqh` | `MarkDrawingsDirty()` on move/delete commit |
-| `src/engine/ToolsPalette_Engine_Properties.mqh` | `MarkDrawingsDirty()` in property setters |
+| `src/core/ToolsPalette_Shell.mqh` | `Init()` → install persistent timer + `RestoreDrawings()`; `OnTimer()` → `MaybeFlushDrawings()`; `Destroy()` → final flush + kill timer |
+| `src/engine/ToolsPalette_Engine_Edit.mqh` | `CommitLabel()`/`CancelLabel()` re-arm heartbeat instead of `EventKillTimer()`; `CommitLabel()` → `MarkDrawingsDirty()` |
+| `src/engine/ToolsPalette_Engine_Interact.mqh` | `MarkDrawingsDirty()` in the mouse-up drag-release block |
+| `src/engine/ToolsPalette_Engine_Properties.mqh` | `if(!preview) MarkDrawingsDirty()` in each `SetObjectProperty` overload |
 
 ## Test Plan (manual, MT5)
 
