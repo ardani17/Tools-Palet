@@ -1535,7 +1535,7 @@ void CToolsSidebar::OnEvent(const int id, const long &lp, const double &dp, cons
 //+------------------------------------------------------------------+
 void CToolsSidebar::OnTimer()
   {
-   //--- Only active during label edits (StartLabelEdit enables, Commit/Cancel disable via EventKillTimer)
+   //--- Persistent heartbeat timer (500 ms): label caret blink, settings/popover ticks, debounced drawing flush
    if(m_isEditingLabel)
      {
       //--- Redraw all objects so the caret visibly toggles on / off

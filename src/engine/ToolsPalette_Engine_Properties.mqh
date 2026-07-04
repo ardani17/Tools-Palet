@@ -1375,7 +1375,11 @@ bool CDrawingEngine::SetObjectPointPrice(int objId, int pointIdx, double newPric
       else if(pointIdx == 2) { m_drawnObjects[idx].price3 = newPrice; ok = true; }
      }
    //--- Only redraw if the write actually landed (avoid redraw on bad point indices)
-   if(ok) RedrawAllObjects();
+   if(ok)
+     {
+      if(!preview) MarkDrawingsDirty();
+      RedrawAllObjects();
+     }
    return ok;
   }
 
@@ -1405,7 +1409,11 @@ bool CDrawingEngine::SetObjectPointTime(int objId, int pointIdx, datetime newTim
       else if(pointIdx == 2) { m_drawnObjects[idx].time3 = newTime; ok = true; }
      }
    //--- Only redraw if the write actually landed
-   if(ok) RedrawAllObjects();
+   if(ok)
+     {
+      if(!preview) MarkDrawingsDirty();
+      RedrawAllObjects();
+     }
    return ok;
   }
 

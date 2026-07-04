@@ -36,10 +36,21 @@ string TP_Escape(string s)
   }
 string TP_Unescape(string s)
   {
-   StringReplace(s, "\\n", "\n");
-   StringReplace(s, "\\r", "\r");
-   StringReplace(s, "\\\\", "\\");
-   return s;
+   string out = "";
+   int len = StringLen(s);
+   for(int i = 0; i < len; i++)
+     {
+      ushort ch = StringGetCharacter(s, i);
+      if(ch == '\\' && i + 1 < len)
+        {
+         ushort next = StringGetCharacter(s, i + 1);
+         if(next == 'n')  { out += "\n"; i++; continue; }
+         if(next == 'r')  { out += "\r"; i++; continue; }
+         if(next == '\\') { out += "\\"; i++; continue; }
+        }
+      out += StringSubstr(s, i, 1);
+     }
+   return out;
   }
 
 //--- Comma-join helpers for the parallel level-arrays
