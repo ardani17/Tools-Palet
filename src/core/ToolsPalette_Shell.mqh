@@ -1012,6 +1012,11 @@ bool CToolsSidebar::Init(long chartId)
    ChartSetInteger(0, CHART_EVENT_MOUSE_MOVE,  true);
    ChartSetInteger(0, CHART_EVENT_MOUSE_WHEEL, true);
    ChartSetInteger(0, CHART_MOUSE_SCROLL,      true);
+   //--- Restore any persisted drawings for this chart, then paint them
+   if(RestoreDrawings())
+      RedrawAllObjects();
+   //--- Persistent heartbeat timer drives the debounced drawing flush (and label-caret blink)
+   EventSetMillisecondTimer(500);
    return true;
   }
 
@@ -1043,8 +1048,10 @@ void CToolsSidebar::Destroy()
   {
    //--- Hide crosshair + end any active measure session before tearing down canvases
    CleanupCrosshairOnToolSwitch();
-   //--- Kill any active edit-mode timer (StartLabelEdit's timer drives the cursor blink)
-   if(m_isEditingLabel) EventKillTimer();
+   //--- Final persistence flush before teardown (covers timeframe change / EA removal)
+   if(m_drawingsDirty) { SaveDrawings(); m_drawingsDirty = false; }
+   //--- Kill the persistent heartbeat timer
+   EventKillTimer();
    //--- Force-restore keyboard override (idempotent if not active) - prevents lock-out on unexpected unload
    EndKeyboardOverride();
    m_currentActiveTool = TOOL_NONE;
@@ -1539,6 +1546,8 @@ void CToolsSidebar::OnTimer()
    SettingsTick();
    //--- Also drive the popover opacity-box caret blink (independent timer phase, but same trigger)
    RibbonTick();
+   //--- Debounced persistence flush (writes at most ~once per change burst)
+   MaybeFlushDrawings();
   }
 
 #endif // TOOLS_PALETTE_SHELL_MQH

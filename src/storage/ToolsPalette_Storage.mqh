@@ -386,7 +386,15 @@ bool CDrawingEngine::RestoreDrawings()
    return true;
   }
 
-// MaybeFlushDrawings() is implemented in Task 3.
-void CDrawingEngine::MaybeFlushDrawings() { }
+//+------------------------------------------------------------------+
+//| Flush the store if dirty and the debounce window has elapsed     |
+//+------------------------------------------------------------------+
+void CDrawingEngine::MaybeFlushDrawings()
+  {
+   if(!m_drawingsDirty) return;
+   if(GetTickCount() - m_drawingsDirtyTick < 400) return;
+   SaveDrawings();
+   m_drawingsDirty = false;
+  }
 
 #endif // TOOLS_PALETTE_STORAGE_MQH
