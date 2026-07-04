@@ -21,19 +21,20 @@ Rantai inheritance:
 
 Entry point: `src/Tools Palet.mq5`.
 
-## Install / Compile
+## Dokumentasi
 
-1. Cari folder data terminal MT5: di MetaEditor/Terminal pilih **File > Open Data Folder**.
-2. Dari root repo, jalankan script deploy (membuat junction, tanpa copy manual):
+| Dokumen | Isi |
+|---------|-----|
+| **[Panduan Compile](docs/compile.md)** | Deploy junction, compile MetaEditor/CLI, attach EA, troubleshooting |
+| **[Panduan Penggunaan](docs/panduan-penggunaan.md)** | UI, semua kategori alat, placement, edit, persistensi, shortcut |
 
-   ```powershell
-   .\scripts\deploy-mt5.ps1 -TerminalDataPath "C:\Users\<user>\AppData\Roaming\MetaQuotes\Terminal\<HASH>"
-   ```
+## Install / Compile (ringkas)
 
-3. Buka MetaEditor -> `Experts\ToolsPalet\Tools Palet.mq5` -> **Compile (F7)**. Pastikan 0 error.
-4. Di terminal MT5, attach EA `ToolsPalet` ke chart.
+1. Deploy junction: `.\scripts\deploy-mt5.ps1 -TerminalDataPath "<folder data MT5>"`
+2. MetaEditor → `Experts\ToolsPalet\Tools Palet.mq5` → **Compile (F7)** → 0 error
+3. Attach EA **ToolsPalet** ke chart; aktifkan **Algo Trading**
 
-> Junction memetakan `MQL5\Experts\ToolsPalet` ke folder `src/` repo, jadi edit di repo langsung terpakai saat compile.
+Detail lengkap: **[docs/compile.md](docs/compile.md)**
 
 ## Branch Workflow
 
@@ -50,11 +51,4 @@ beta  ->  development  ->  main
 
 - Binary hasil compile (`*.ex5`) tidak di-track git (lihat `.gitignore`).
 - Belum ada test otomatis (keterbatasan MT5); verifikasi = compile sukses + smoke test manual.
-
-### Persistensi Drawing
-
-Objek drawing otomatis disimpan per-chart ke
-`MQL5\Files\ToolsPalette\drawings\<Symbol>_<ChartID>.dat` dan dipulihkan saat
-ganti timeframe maupun restart terminal. Isolasi per-chart memakai ChartID.
-Perubahan ditulis ke disk secara debounced (~400 ms setelah mutasi terakhir) dan
-di-flush final saat EA di-unload (termasuk saat ganti timeframe).
+- Persistensi drawing: lihat bagian **Persistensi** di [panduan-penggunaan.md](docs/panduan-penggunaan.md).
