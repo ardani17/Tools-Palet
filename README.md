@@ -50,3 +50,11 @@ beta  ->  development  ->  main
 
 - Binary hasil compile (`*.ex5`) tidak di-track git (lihat `.gitignore`).
 - Belum ada test otomatis (keterbatasan MT5); verifikasi = compile sukses + smoke test manual.
+
+### Persistensi Drawing
+
+Objek drawing otomatis disimpan per-chart ke
+`MQL5\Files\ToolsPalette\drawings\<Symbol>_<ChartID>.dat` dan dipulihkan saat
+ganti timeframe maupun restart terminal. Isolasi per-chart memakai ChartID.
+Perubahan ditulis ke disk secara debounced (~400 ms setelah mutasi terakhir) dan
+di-flush final saat EA di-unload (termasuk saat ganti timeframe).
