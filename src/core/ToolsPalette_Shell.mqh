@@ -1049,7 +1049,7 @@ void CToolsSidebar::Destroy()
    //--- Hide crosshair + end any active measure session before tearing down canvases
    CleanupCrosshairOnToolSwitch();
    //--- Final persistence flush before teardown (covers timeframe change / EA removal)
-   if(m_drawingsDirty) { SaveDrawings(); m_drawingsDirty = false; }
+   if(m_drawingsDirty && SaveDrawings()) m_drawingsDirty = false;
    //--- Kill the persistent heartbeat timer
    EventKillTimer();
    //--- Force-restore keyboard override (idempotent if not active) - prevents lock-out on unexpected unload

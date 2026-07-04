@@ -778,7 +778,7 @@ protected:
    string       DrawingsFilePath();
    void         MarkDrawingsDirty();
    void         MaybeFlushDrawings();
-   void         SaveDrawings();
+   bool         SaveDrawings();
    bool         RestoreDrawings();
    void         MaterializeLoadedObject(const string &keys[], const string &vals[], int &maxId);
    void         ClearAllDrawnObjects();

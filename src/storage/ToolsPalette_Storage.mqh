@@ -131,6 +131,9 @@ color  TP_GetC(const string &keys[], const string &vals[], string key, color def
 bool   TP_GetB(const string &keys[], const string &vals[], string key, bool def)
   { string v=TP_Get(keys,vals,key,""); return (v=="")?def:(v=="1"); }
 
+int TP_MinInt(int a, int b)
+  { return (a < b) ? a : b; }
+
 //--- Read one fibo/gann group from keys/vals into 6 parallel arrays
 void TP_ReadLevelGroup(const string &keys[], const string &vals[], string prefix,
                        double &ratio[], color &col[], int &op[], int &wd[], int &st[], bool &vis[])
@@ -141,6 +144,18 @@ void TP_ReadLevelGroup(const string &keys[], const string &vals[], string prefix
    TP_SplitInt   (TP_Get(keys,vals,prefix+".width",""),   wd);
    TP_SplitInt   (TP_Get(keys,vals,prefix+".style",""),   st);
    TP_SplitBool  (TP_Get(keys,vals,prefix+".visible",""), vis);
+   int n = ArraySize(ratio);
+   n = TP_MinInt(n, ArraySize(col));
+   n = TP_MinInt(n, ArraySize(op));
+   n = TP_MinInt(n, ArraySize(wd));
+   n = TP_MinInt(n, ArraySize(st));
+   n = TP_MinInt(n, ArraySize(vis));
+   ArrayResize(ratio,n);
+   ArrayResize(col,n);
+   ArrayResize(op,n);
+   ArrayResize(wd,n);
+   ArrayResize(st,n);
+   ArrayResize(vis,n);
   }
 
 //--- Write one fibo/gann level group (6 parallel arrays) under a prefix
@@ -239,13 +254,15 @@ void TP_WriteObject(int h, const DrawnObject &o)
 //+------------------------------------------------------------------+
 //| Serialize the whole store to the chart file (atomic tmp+move)    |
 //+------------------------------------------------------------------+
-void CDrawingEngine::SaveDrawings()
+bool CDrawingEngine::SaveDrawings()
   {
    string path = DrawingsFilePath();
    string tmp  = path + ".tmp";
+   FolderCreate("ToolsPalette");
+   FolderCreate("ToolsPalette\\drawings");
    int h = FileOpen(tmp, FILE_WRITE|FILE_TXT|FILE_ANSI);
    if(h == INVALID_HANDLE)
-     { Print("ToolsPalette: SaveDrawings FileOpen failed for ",tmp," err=",GetLastError()); return; }
+     { Print("ToolsPalette: SaveDrawings FileOpen failed for ",tmp," err=",GetLastError()); return false; }
    FileWriteString(h, "TPDRAW v="+IntegerToString(TP_DRAW_SCHEMA_VERSION)+"\r\n");
    FileWriteString(h, "counter="+IntegerToString(m_drawnObjectCounter)+"\r\n");
    int n = ArraySize(m_drawnObjects);
@@ -253,7 +270,8 @@ void CDrawingEngine::SaveDrawings()
    FileClose(h);
    //--- Atomically replace the live file (avoids corruption on interrupted write)
    if(!FileMove(tmp, 0, path, FILE_REWRITE))
-      Print("ToolsPalette: SaveDrawings FileMove failed err=",GetLastError());
+     { Print("ToolsPalette: SaveDrawings FileMove failed err=",GetLastError()); return false; }
+   return true;
   }
 
 //+------------------------------------------------------------------+
@@ -276,6 +294,9 @@ void CDrawingEngine::MaterializeLoadedObject(const string &keys[], const string 
      ArrayResize(o.pathTimes,pn);
      for(int i=0;i<pn;i++) o.pathTimes[i]=(datetime)StringToInteger(parts[i]); }
    TP_SplitDouble(TP_Get(keys,vals,"path.price",""), o.pathPrices);
+   int pathN = TP_MinInt(ArraySize(o.pathTimes), ArraySize(o.pathPrices));
+   ArrayResize(o.pathTimes, pathN);
+   ArrayResize(o.pathPrices, pathN);
    //--- Core style / visibility / label
    o.objColor    = TP_GetC(keys,vals,"objColor",clrRed);
    o.selected    = false;                       // never restore selection
@@ -404,8 +425,8 @@ void CDrawingEngine::MaybeFlushDrawings()
   {
    if(!m_drawingsDirty) return;
    if(GetTickCount() - m_drawingsDirtyTick < 400) return;
-   SaveDrawings();
-   m_drawingsDirty = false;
+   if(SaveDrawings())
+      m_drawingsDirty = false;
   }
 
 #endif // TOOLS_PALETTE_STORAGE_MQH
