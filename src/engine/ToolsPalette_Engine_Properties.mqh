@@ -788,6 +788,12 @@ bool CDrawingEngine::GetObjectProperty(int objId, string propId, bool &outValue)
       outValue = m_drawnObjects[idx].bold;
       return true;
      }
+   //--- Drawing interaction lock
+   if(propId == "locked")
+     {
+      outValue = m_drawnObjects[idx].locked;
+      return true;
+     }
    //--- Channel midline visibility
    if(propId == "midVisible")
      {
@@ -846,15 +852,22 @@ bool CDrawingEngine::GetObjectProperty(int objId, string propId, bool &outValue)
 //+------------------------------------------------------------------+
 bool CDrawingEngine::SetObjectProperty(int objId, string propId, bool value, bool preview)
   {
-   if(!preview) MarkDrawingsDirty();
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
+   if(!preview) MarkDrawingsDirty();
 
    //--- Bold text flag
    if(propId == "bold")
      {
       m_drawnObjects[idx].bold = value;
+      RedrawAllObjects();
+      return true;
+     }
+   //--- Drawing interaction lock
+   if(propId == "locked")
+     {
+      m_drawnObjects[idx].locked = value;
       RedrawAllObjects();
       return true;
      }

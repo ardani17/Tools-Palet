@@ -194,6 +194,7 @@ void TP_WriteObject(int h, const DrawnObject &o)
    //--- Core style / visibility / label
    FileWriteString(h, "objColor="+IntegerToString((int)o.objColor)+"\r\n");
    FileWriteString(h, "visible="+(o.visible?"1":"0")+"\r\n");
+   FileWriteString(h, "locked="+(o.locked?"1":"0")+"\r\n");
    FileWriteString(h, "labelText="+TP_Escape(o.labelText)+"\r\n");
    FileWriteString(h, "lineWidth="+IntegerToString(o.lineWidth)+"\r\n");
    FileWriteString(h, "lineStyle="+IntegerToString(o.lineStyle)+"\r\n");
@@ -301,6 +302,7 @@ void CDrawingEngine::MaterializeLoadedObject(const string &keys[], const string 
    o.objColor    = TP_GetC(keys,vals,"objColor",clrRed);
    o.selected    = false;                       // never restore selection
    o.visible     = TP_GetB(keys,vals,"visible",true);
+   o.locked      = TP_GetB(keys,vals,"locked",false);
    o.labelText   = TP_Unescape(TP_Get(keys,vals,"labelText",""));
    o.lineWidth   = TP_GetI(keys,vals,"lineWidth",2);
    o.lineStyle   = TP_GetI(keys,vals,"lineStyle",0);
