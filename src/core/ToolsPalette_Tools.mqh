@@ -1439,13 +1439,41 @@ int CDrawingEngine::AddDrawnObject(TOOL_TYPE toolType,
    m_drawnObjects[sz].lowerBandVisible = true;
    m_drawnObjects[sz].lowerBandSigma   = 2.0;
    m_drawnObjects[sz].pearsonVisible   = true;
-   //--- Fibonacci retracement level defaults (canonical 24-level preset)
-   TP_FillFibRetracementPreset(m_drawnObjects[sz].fiboLevelRatio,
-                               m_drawnObjects[sz].fiboLevelColor,
-                               m_drawnObjects[sz].fiboLevelOpacity,
-                               m_drawnObjects[sz].fiboLevelWidth,
-                               m_drawnObjects[sz].fiboLevelStyle,
-                               m_drawnObjects[sz].fiboLevelVisible);
+   //--- Fibonacci retracement uses the canonical 24-level preset; all other tools retain legacy defaults.
+   if(toolType == TOOL_FIBO_RETRACEMENT)
+     {
+      TP_FillFibRetracementPreset(m_drawnObjects[sz].fiboLevelRatio,
+                                  m_drawnObjects[sz].fiboLevelColor,
+                                  m_drawnObjects[sz].fiboLevelOpacity,
+                                  m_drawnObjects[sz].fiboLevelWidth,
+                                  m_drawnObjects[sz].fiboLevelStyle,
+                                  m_drawnObjects[sz].fiboLevelVisible);
+     }
+   else
+     {
+      const int FIBO_DEFAULT_N = 11;
+      ArrayResize(m_drawnObjects[sz].fiboLevelRatio,    FIBO_DEFAULT_N);
+      ArrayResize(m_drawnObjects[sz].fiboLevelColor,    FIBO_DEFAULT_N);
+      ArrayResize(m_drawnObjects[sz].fiboLevelOpacity,  FIBO_DEFAULT_N);
+      ArrayResize(m_drawnObjects[sz].fiboLevelWidth,    FIBO_DEFAULT_N);
+      ArrayResize(m_drawnObjects[sz].fiboLevelStyle,    FIBO_DEFAULT_N);
+      ArrayResize(m_drawnObjects[sz].fiboLevelVisible,  FIBO_DEFAULT_N);
+      const double defRatios[] = {0.0, 0.236, 0.382, 0.5, 0.618, 0.786,
+                                   1.0, 1.618, 2.618, 3.618, 4.236};
+      const color  defColors[] = {clrGray,        clrCrimson,    clrOrange,
+                                   clrGoldenrod,   clrSeaGreen,   clrDarkCyan,
+                                   clrGray,        clrDodgerBlue, clrMediumOrchid,
+                                   clrBlueViolet,  clrCrimson};
+      for(int k = 0; k < FIBO_DEFAULT_N; k++)
+        {
+         m_drawnObjects[sz].fiboLevelRatio[k]    = defRatios[k];
+         m_drawnObjects[sz].fiboLevelColor[k]    = defColors[k];
+         m_drawnObjects[sz].fiboLevelOpacity[k]  = 100;
+         m_drawnObjects[sz].fiboLevelWidth[k]    = 2;
+         m_drawnObjects[sz].fiboLevelStyle[k]    = 0;
+         m_drawnObjects[sz].fiboLevelVisible[k]  = true;
+        }
+     }
    //--- Fibonacci expansion (fibex) defaults - 11 levels with same ratios as fibo retracement
      {
       const int N = 11;
