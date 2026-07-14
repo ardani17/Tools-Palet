@@ -44,7 +44,9 @@ public:
                                 const int    &lvlStyle[],
                                 const bool   &lvlVisible[]);
    bool   HitTestFibRetracement(int mx, int my, int canvasW,
-                                 int x1, int y1, int x2, int y2, int threshold);
+                                 int x1, int y1, int x2, int y2, int threshold,
+                                 const double &lvlRatio[],
+                                 const bool &lvlVisible[]);
    //--- Fib Expansion: 3-click; extensions project from P3 along the P1-P2 swing
    void   DrawFibExpansionOn(CCanvas &canvas,
                               int x1, int y1, int x2, int y2, int x3, int y3,
@@ -344,20 +346,19 @@ void CFibonacciTools::DrawFibRetracementOn(CCanvas &canvas,
 //| Hit-test Fib Retracement - cursor near any horizontal ratio line |
 //+------------------------------------------------------------------+
 bool CFibonacciTools::HitTestFibRetracement(int mx, int my, int canvasW,
-                                             int x1, int y1, int x2, int y2, int threshold)
+                                             int x1, int y1, int x2, int y2, int threshold,
+                                             const double &lvlRatio[],
+                                             const bool &lvlVisible[])
   {
-   //--- Canonical Fib Retracement levels for the hit-test (must match commit defaults)
-   double levels[] = {0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0,
-                      1.618, 2.618, 3.618, 4.236};
-   int nLev = ArraySize(levels);
    //--- Restrict the hit zone to the P1-P2 X-range
    int xL = MathMin(x1, x2);
    int xR = MathMax(x1, x2);
-   //--- Walk every level and test proximity to its horizontal line
-   for(int i = 0; i < nLev; i++)
+   int count = MathMin(ArraySize(lvlRatio), ArraySize(lvlVisible));
+   //--- Walk every visible level and test proximity to its horizontal line
+   for(int i = 0; i < count; i++)
      {
-      //--- Y-coord of this level interpolated between P1 and P2
-      int ly = y1 + (int)MathRound((double)(y2 - y1) * levels[i]);
+      if(!lvlVisible[i]) continue;
+      int ly = y1 + (int)MathRound((double)(y2 - y1) * lvlRatio[i]);
       if(PointToSegmentDistance(mx, my, xL, ly, xR, ly) <= threshold) return true;
      }
    return false;
@@ -469,9 +470,9 @@ bool CFibonacciTools::HitTestFibExpansion(int mx, int my, int canvasW,
                                            int threshold)
   {
    //--- Canonical Fib Expansion levels (must match commit defaults)
-   double levels[] = {0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0,
-                      1.618, 2.618, 3.618, 4.236};
-   int nLev = ArraySize(levels);
+   double expansionLevels[] = {0.0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0,
+                               1.618, 2.618, 3.618, 4.236};
+   int nLev = ArraySize(expansionLevels);
    //--- Swing deltas drive the projection from P3
    double dy = (double)(y2 - y1);
    int swingDx = x2 - x1;
@@ -481,7 +482,7 @@ bool CFibonacciTools::HitTestFibExpansion(int mx, int my, int canvasW,
    //--- Walk every level and test proximity to its horizontal extension line
    for(int i = 0; i < nLev; i++)
      {
-      int ly = y3 + (int)MathRound(dy * levels[i]);
+      int ly = y3 + (int)MathRound(dy * expansionLevels[i]);
       if(PointToSegmentDistance(mx, my, xL, ly, xR, ly) <= threshold) return true;
      }
    return false;
