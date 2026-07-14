@@ -8,6 +8,7 @@
 # SDD scratch (briefs, reports, diffs, progress ledger)
 .superpowers/
 docs/superpowers/
+.worktrees/
 
 # OS
 Thumbs.db

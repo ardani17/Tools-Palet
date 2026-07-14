@@ -5,6 +5,21 @@ Semua perubahan penting pada proyek **Tools Palette (MT5)** didokumentasikan di 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/),
 dan proyek ini memakai [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.1.0] - 2026-07-14
+
+### Added
+
+- **Lock drawing universal** melalui ikon gembok di ribbon. Drawing terkunci
+  tetap dapat dipilih, diubah style/teks/visibility-nya, dihapus, dan dibuka
+  kembali, tetapi tidak dapat dipindahkan atau diubah bentuknya.
+- Status lock disimpan bersama drawing dan dipulihkan setelah ganti timeframe
+  maupun restart terminal.
+
+### Changed
+
+- Lock juga memblokir perubahan koordinat melalui Settings agar anchor drawing
+  tidak dapat bergeser dari jalur mana pun.
+
 ## [1.0.0] - 2026-07-04
 
 Rilis stabil pertama ke `main`. EA menyediakan palet alat drawing lengkap
@@ -46,4 +61,5 @@ di atas chart MetaTrader 5 (mirip TradingView), dirender ke canvas bitmap
   **compile 0 error/warning** + smoke test manual di chart.
 - Binary hasil compile (`*.ex5`) tidak di-track git.
 
+[1.1.0]: https://github.com/ardani17/Tools-Palet/releases/tag/v1.1.0
 [1.0.0]: https://github.com/ardani17/Tools-Palet/releases/tag/v1.0.0

@@ -253,6 +253,16 @@ Aktifkan **Pointer** dari kategori Cursors.
 - **Drag body objek** → pindahkan seluruh objek
 - **Drag handle (titik anchor)** → ubah posisi titik tertentu
 
+### Mengunci drawing
+
+1. Aktifkan **Pointer**, lalu pilih drawing yang ingin dikunci.
+2. Klik ikon **Lock/unlock (gembok)** di ribbon.
+
+Drawing yang terkunci tetap dapat dipilih, diubah style, teks, dan visibilitasnya,
+dihapus, serta dibuka kembali kuncinya. Namun, body dan handle tidak dapat digeser.
+Klik ikon gembok lagi untuk membuka kunci. Semua jenis drawing mendukung penguncian,
+dan status kunci setiap objek tetap tersimpan.
+
 ### Menghapus objek
 
 | Cara | Keterangan |
@@ -279,6 +289,7 @@ Muncul otomatis saat objek dipilih. Berisi:
 - Opacity (slider + input angka)
 - Lebar garis, style garis
 - Font size (untuk objek teks)
+- Tombol **Lock/unlock (gembok)** → kunci atau buka posisi dan bentuk drawing
 - Tombol **Settings (gear)** → buka panel lengkap
 
 **Popover warna:** klik swatch → pilih warna + opacity → klik di luar untuk tutup.
@@ -321,6 +332,9 @@ Semua objek drawing disimpan otomatis per-chart ke file:
 ```
 MQL5\Files\ToolsPalette\drawings\<Symbol>_<ChartID>.dat
 ```
+
+Data yang dipulihkan mencakup jenis drawing, koordinat waktu/harga, style, teks,
+visibilitas, dan status kunci per objek.
 
 ### Kapan disimpan
 

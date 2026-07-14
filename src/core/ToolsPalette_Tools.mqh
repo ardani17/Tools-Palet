@@ -536,10 +536,11 @@ struct DrawnObject
    double    price3;
    datetime  pathTimes[];
    double    pathPrices[];
-   //--- Selection + visibility + label text
+   //--- Selection + visibility + lock state + label text
    color     objColor;
    bool      selected;
    bool      visible;
+   bool      locked;
    string    labelText;
    //--- Per-object style overrides (line, text, opacity, font, alignment)
    int       lineWidth;
@@ -1239,6 +1240,7 @@ void CDrawingEngine::ApplyToolMemory(int newIdx)
    const double    savedP3       = m_drawnObjects[newIdx].price3;
    const bool      savedSelected = m_drawnObjects[newIdx].selected;
    const bool      savedVisible  = m_drawnObjects[newIdx].visible;
+   const bool      savedLocked   = m_drawnObjects[newIdx].locked;
    const string    savedLabelText = m_drawnObjects[newIdx].labelText;
    //--- Save the path arrays too (since paths can have many points distinct from P1/P2/P3)
    datetime savedPathTimes[];
@@ -1308,6 +1310,7 @@ void CDrawingEngine::ApplyToolMemory(int newIdx)
    m_drawnObjects[newIdx].price3    = savedP3;
    m_drawnObjects[newIdx].selected  = savedSelected;
    m_drawnObjects[newIdx].visible   = savedVisible;
+   m_drawnObjects[newIdx].locked    = savedLocked;
    m_drawnObjects[newIdx].labelText = savedLabelText;
    ArrayCopy(m_drawnObjects[newIdx].pathTimes,  savedPathTimes);
    ArrayCopy(m_drawnObjects[newIdx].pathPrices, savedPathPrices);
@@ -1340,6 +1343,7 @@ int CDrawingEngine::AddDrawnObject(TOOL_TYPE toolType,
    //--- New objects start unselected - callers are responsible for SelectObjectById if desired
    m_drawnObjects[sz].selected  = false;
    m_drawnObjects[sz].visible   = true;
+   m_drawnObjects[sz].locked    = false;
    m_drawnObjects[sz].labelText = "";
    //--- Default line + text style overrides
    m_drawnObjects[sz].lineWidth   = 2;
@@ -1791,6 +1795,7 @@ void CDrawingEngine::ApplyToolDefaults(int objId)
    const double    savedP3       = m_drawnObjects[liveIdx].price3;
    const bool      savedSelected = m_drawnObjects[liveIdx].selected;
    const bool      savedVisible  = m_drawnObjects[liveIdx].visible;
+   const bool      savedLocked   = m_drawnObjects[liveIdx].locked;
    const string    savedLabelText = m_drawnObjects[liveIdx].labelText;
    //--- Save the path arrays too (since paths can have many points distinct from P1/P2/P3)
    datetime savedPathTimes[];
@@ -1870,6 +1875,7 @@ void CDrawingEngine::ApplyToolDefaults(int objId)
    m_drawnObjects[liveIdx].price3    = savedP3;
    m_drawnObjects[liveIdx].selected  = savedSelected;
    m_drawnObjects[liveIdx].visible   = savedVisible;
+   m_drawnObjects[liveIdx].locked    = savedLocked;
    m_drawnObjects[liveIdx].labelText = savedLabelText;
    ArrayCopy(m_drawnObjects[liveIdx].pathTimes,  savedPathTimes);
    ArrayCopy(m_drawnObjects[liveIdx].pathPrices, savedPathPrices);
