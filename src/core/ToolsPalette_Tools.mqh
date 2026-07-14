@@ -646,6 +646,67 @@ struct DrawnObject
    int       innerStyle;
   };
 
+#define TP_FIBO_RETRACEMENT_PRESET_VERSION 2
+
+void TP_FillFibRetracementPreset(double &ratios[], color &colors[],
+                                 int &opacities[], int &widths[],
+                                 int &styles[], bool &visible[])
+  {
+   const double presetRatios[] = {0.0,0.236,0.382,0.5,0.618,0.786,
+                                   1.0,1.272,1.414,1.618,2.0,2.272,
+                                   2.414,2.618,3.0,3.272,3.414,3.618,
+                                   4.0,4.236,4.272,4.414,4.618,4.764};
+   const bool presetVisible[] = {true,false,true,true,true,false,
+                                  true,false,false,true,false,false,
+                                  false,false,false,false,false,false,
+                                  false,false,false,false,false,false};
+   const color presetColors[] = {clrGray,clrCrimson,clrOrange,clrGoldenrod,
+                                  clrSeaGreen,clrDarkCyan,clrGray,clrDodgerBlue,
+                                  clrDodgerBlue,clrDodgerBlue,clrDodgerBlue,clrDodgerBlue,
+                                  clrDodgerBlue,clrMediumOrchid,clrDodgerBlue,clrDodgerBlue,
+                                  clrDodgerBlue,clrBlueViolet,clrDodgerBlue,clrCrimson,
+                                  clrDodgerBlue,clrDodgerBlue,clrDeepPink,clrDodgerBlue};
+   const int count = ArraySize(presetRatios);
+   ArrayResize(ratios,count);   ArrayResize(colors,count);
+   ArrayResize(opacities,count); ArrayResize(widths,count);
+   ArrayResize(styles,count);   ArrayResize(visible,count);
+   for(int i=0;i<count;i++)
+     {
+      ratios[i]=presetRatios[i]; colors[i]=presetColors[i];
+      opacities[i]=100; widths[i]=2; styles[i]=0;
+      visible[i]=presetVisible[i];
+     }
+  }
+
+void TP_MigrateFibRetracementPreset(DrawnObject &object)
+  {
+   double oldRatios[]; color oldColors[]; int oldOpacities[];
+   int oldWidths[]; int oldStyles[];
+   ArrayCopy(oldRatios,object.fiboLevelRatio);
+   ArrayCopy(oldColors,object.fiboLevelColor);
+   ArrayCopy(oldOpacities,object.fiboLevelOpacity);
+   ArrayCopy(oldWidths,object.fiboLevelWidth);
+   ArrayCopy(oldStyles,object.fiboLevelStyle);
+
+   TP_FillFibRetracementPreset(object.fiboLevelRatio,
+                               object.fiboLevelColor,
+                               object.fiboLevelOpacity,
+                               object.fiboLevelWidth,
+                               object.fiboLevelStyle,
+                               object.fiboLevelVisible);
+
+   for(int i=0;i<ArraySize(object.fiboLevelRatio);i++)
+      for(int j=0;j<ArraySize(oldRatios);j++)
+         if(MathAbs(object.fiboLevelRatio[i]-oldRatios[j])<1e-6)
+           {
+            if(j<ArraySize(oldColors))    object.fiboLevelColor[i]=oldColors[j];
+            if(j<ArraySize(oldOpacities)) object.fiboLevelOpacity[i]=oldOpacities[j];
+            if(j<ArraySize(oldWidths))    object.fiboLevelWidth[i]=oldWidths[j];
+            if(j<ArraySize(oldStyles))    object.fiboLevelStyle[i]=oldStyles[j];
+            break;
+           }
+  }
+
 //--- Label anchor-mode constants (drives DrawObjectLabel vertical placement)
 #define LBL_ANCHOR_ABOVE_LINE   0
 #define LBL_ANCHOR_CENTERED     1
@@ -1378,33 +1439,13 @@ int CDrawingEngine::AddDrawnObject(TOOL_TYPE toolType,
    m_drawnObjects[sz].lowerBandVisible = true;
    m_drawnObjects[sz].lowerBandSigma   = 2.0;
    m_drawnObjects[sz].pearsonVisible   = true;
-   //--- Fibonacci retracement level defaults (11 levels: 0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0, 1.618, 2.618, 3.618, 4.236)
-     {
-      const int FIBO_DEFAULT_N = 11;
-      //--- Size the 6 parallel level-arrays to match
-      ArrayResize(m_drawnObjects[sz].fiboLevelRatio,    FIBO_DEFAULT_N);
-      ArrayResize(m_drawnObjects[sz].fiboLevelColor,    FIBO_DEFAULT_N);
-      ArrayResize(m_drawnObjects[sz].fiboLevelOpacity,  FIBO_DEFAULT_N);
-      ArrayResize(m_drawnObjects[sz].fiboLevelWidth,    FIBO_DEFAULT_N);
-      ArrayResize(m_drawnObjects[sz].fiboLevelStyle,    FIBO_DEFAULT_N);
-      ArrayResize(m_drawnObjects[sz].fiboLevelVisible,  FIBO_DEFAULT_N);
-      const double defRatios[] = {0.0, 0.236, 0.382, 0.5, 0.618, 0.786,
-                                   1.0, 1.618, 2.618, 3.618, 4.236};
-      const color  defColors[] = {clrGray,        clrCrimson,    clrOrange,
-                                   clrGoldenrod,   clrSeaGreen,   clrDarkCyan,
-                                   clrGray,        clrDodgerBlue, clrMediumOrchid,
-                                   clrBlueViolet,  clrCrimson};
-      //--- Populate each level's defaults
-      for(int k = 0; k < FIBO_DEFAULT_N; k++)
-        {
-         m_drawnObjects[sz].fiboLevelRatio[k]    = defRatios[k];
-         m_drawnObjects[sz].fiboLevelColor[k]    = defColors[k];
-         m_drawnObjects[sz].fiboLevelOpacity[k]  = 100;
-         m_drawnObjects[sz].fiboLevelWidth[k]    = 2;
-         m_drawnObjects[sz].fiboLevelStyle[k]    = 0;
-         m_drawnObjects[sz].fiboLevelVisible[k]  = true;
-        }
-     }
+   //--- Fibonacci retracement level defaults (canonical 24-level preset)
+   TP_FillFibRetracementPreset(m_drawnObjects[sz].fiboLevelRatio,
+                               m_drawnObjects[sz].fiboLevelColor,
+                               m_drawnObjects[sz].fiboLevelOpacity,
+                               m_drawnObjects[sz].fiboLevelWidth,
+                               m_drawnObjects[sz].fiboLevelStyle,
+                               m_drawnObjects[sz].fiboLevelVisible);
    //--- Fibonacci expansion (fibex) defaults - 11 levels with same ratios as fibo retracement
      {
       const int N = 11;
