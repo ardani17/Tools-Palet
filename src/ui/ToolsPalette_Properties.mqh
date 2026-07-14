@@ -1243,16 +1243,19 @@ void BuildPropertyListForTool(TOOL_TYPE toolType, SToolProperty &props[])
          break;
      }
 
-   //--- Universal action icons (Settings + Remove) appended only when there are ribbon-visible properties
+   //--- Universal action icons (Lock + Settings + Remove) appended only when there are ribbon-visible properties
    bool hasRibbonProps = false;
    const int existing = ArraySize(props);
    for(int i = 0; i < existing; i++)
      {
       if(props[i].showInRibbon) { hasRibbonProps = true; break; }
      }
-   //--- Append the Settings + Remove action descriptors when ribbon-eligible properties were registered
+   //--- Append the Lock + Settings + Remove action descriptors when ribbon-eligible properties were registered
    if(hasRibbonProps)
      {
+      AddPropertyDescriptor(props, "lock", "",
+                             PROP_ACTION, PROP_GROUP_STYLE,
+                             true, false, "Lock / unlock");
       AddPropertyDescriptor(props, "settings", "",
                              PROP_ACTION, PROP_GROUP_STYLE,
                              true, false, "Settings");
