@@ -1,0 +1,15 @@
+# MetaTrader compiled binary
+*.ex5
+
+# MetaTrader logs & temp
+*.log
+*.tmp
+
+# SDD scratch (briefs, reports, diffs, progress ledger)
+.superpowers/
+docs/superpowers/
+.worktrees/
+
+# OS
+Thumbs.db
+Desktop.ini
