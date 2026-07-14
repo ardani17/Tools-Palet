@@ -1704,6 +1704,69 @@ void RenderRibbonSettingsIcon(CCanvas &canvas,
   }
 
 //+------------------------------------------------------------------+
+//| RenderRibbonLockIcon - closed/open lock glyph for drawing state  |
+//+------------------------------------------------------------------+
+void RenderRibbonLockIcon(CCanvas &canvas,
+                          int x, int y, int size,
+                          bool isLocked,
+                          bool isHovered,
+                          bool isActive,
+                          const ThemeColorSet &theme)
+  {
+   //--- Match the Settings/Remove hover and active background treatment
+   if(isActive)
+     {
+      const uint actArgb = ColorToARGB(theme.flyoutTextColor, 75);
+      const int padAct = 3;
+      FillNoteRoundRect(canvas, x - padAct, y - padAct,
+                          x + size + padAct, y + size + padAct, 5, actArgb);
+     }
+   else if(isHovered)
+     {
+      const uint hovArgb = ColorToARGB(theme.flyoutTextColor, 35);
+      const int padHov = 3;
+      FillNoteRoundRect(canvas, x - padHov, y - padHov,
+                          x + size + padHov, y + size + padHov, 5, hovArgb);
+     }
+
+   const int gL = x + 3;
+   const int gR = x + size - 3;
+   const int gT = y + 3;
+   const int gB = y + size - 3;
+   const int cx = (gL + gR) / 2;
+   const int bodyT = gT + (gB - gT) / 2 - 1;
+   const int bodyL = gL + 1;
+   const int bodyR = gR - 1;
+   const uint glyphArgb = ColorToARGB(theme.flyoutTextColor, 230);
+
+   //--- Lock body with a small keyhole
+   WidgetWuLineAA(canvas, bodyL, bodyT, bodyR, bodyT, glyphArgb);
+   WidgetWuLineAA(canvas, bodyL, bodyT, bodyL, gB, glyphArgb);
+   WidgetWuLineAA(canvas, bodyR, bodyT, bodyR, gB, glyphArgb);
+   WidgetWuLineAA(canvas, bodyL, gB, bodyR, gB, glyphArgb);
+   canvas.CircleWu(cx, bodyT + (gB - bodyT) / 2 - 1, 1.5, glyphArgb);
+
+   //--- Closed shackle sits over the body; open shackle hinges from the right
+   const int shackleY = bodyT - 2;
+   const int shackleTop = gT + 1;
+   if(isLocked)
+     {
+      WidgetWuLineAA(canvas, bodyL + 2, bodyT, bodyL + 2, shackleY, glyphArgb);
+      WidgetWuLineAA(canvas, bodyL + 2, shackleY, bodyL + 4, shackleTop, glyphArgb);
+      WidgetWuLineAA(canvas, bodyL + 4, shackleTop, bodyR - 3, shackleTop, glyphArgb);
+      WidgetWuLineAA(canvas, bodyR - 3, shackleTop, bodyR - 2, shackleY, glyphArgb);
+      WidgetWuLineAA(canvas, bodyR - 2, shackleY, bodyR - 2, bodyT, glyphArgb);
+     }
+   else
+     {
+      WidgetWuLineAA(canvas, bodyR - 2, bodyT, bodyR - 2, shackleY, glyphArgb);
+      WidgetWuLineAA(canvas, bodyR - 2, shackleY, bodyR - 4, shackleTop, glyphArgb);
+      WidgetWuLineAA(canvas, bodyR - 4, shackleTop, cx, shackleTop, glyphArgb);
+      WidgetWuLineAA(canvas, cx, shackleTop, cx - 2, shackleY, glyphArgb);
+     }
+  }
+
+//+------------------------------------------------------------------+
 //| RenderRibbonRemoveIcon - trash-bin glyph (lid + body + content)  |
 //+------------------------------------------------------------------+
 void RenderRibbonRemoveIcon(CCanvas &canvas,

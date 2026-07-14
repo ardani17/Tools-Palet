@@ -573,13 +573,24 @@ bool CRibbon::RibbonMouseDown(int mouseX, int mouseY)
       const string clickedPropId = m_ribbonProperties[iconIdx].id;
       const PROP_TYPE clickedType = m_ribbonProperties[iconIdx].type;
 
-      //--- Action icons (Settings / Remove) bypass the popover entirely
+      //--- Action icons (Lock / Settings / Remove) bypass the popover entirely
       if(clickedType == PROP_ACTION)
         {
          //--- Close any open popover before triggering the action
          if(m_isPopoverVisible) HidePopover();
 
-         if(clickedPropId == "remove")
+         if(clickedPropId == "lock")
+           {
+            //--- Lock action: toggle the selected drawing's persisted locked state
+            bool isLocked = false;
+            if(GetObjectProperty(m_ribbonOwnerObjectId, "locked", isLocked) &&
+               SetObjectProperty(m_ribbonOwnerObjectId, "locked", !isLocked, false))
+              {
+               RedrawRibbon();
+               ChartRedraw();
+              }
+           }
+         else if(clickedPropId == "remove")
            {
             //--- Remove action: capture the owner ID first, deselect and remove the object, then hide the ribbon
             const int targetObjId = m_ribbonOwnerObjectId;
@@ -962,10 +973,17 @@ void CRibbon::DrawRibbonIcons()
                                      activeStyle, activeWidth,
                                      isHovered, isActive, m_themeColors);
         }
-      //--- PROP_ACTION icons: settings (gear) or remove (trash bin)
+      //--- PROP_ACTION icons: lock, settings (gear), or remove (trash bin)
       else if(m_ribbonProperties[i].type == PROP_ACTION)
         {
-         if(m_ribbonProperties[i].id == "settings")
+         if(m_ribbonProperties[i].id == "lock")
+           {
+            bool isLocked = false;
+            GetObjectProperty(m_ribbonOwnerObjectId, "locked", isLocked);
+            RenderRibbonLockIcon(m_canvasRibbon, canvasX, canvasY, sz,
+                                 isLocked, isHovered, isLocked, m_themeColors);
+           }
+         else if(m_ribbonProperties[i].id == "settings")
            {
             RenderRibbonSettingsIcon(m_canvasRibbon, canvasX, canvasY, sz,
                                        isHovered, false, m_themeColors);
