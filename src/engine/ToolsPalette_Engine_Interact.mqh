@@ -684,6 +684,13 @@ void CDrawingEngine::HandlePointerClick(int mouseX, int mouseY)
                            m_drawnObjects[labIdx].toolType == TOOL_COMMENT));
       if(isTextAnnot)
         {
+         //--- Locked text annotations remain editable, but must not arm a geometry drag
+         if(m_drawnObjects[labIdx].locked)
+           {
+            StartLabelEdit();
+            RedrawAllObjects();
+            return;
+           }
          //--- Text-annotation: arm a drag AND mark the click as a pending edit
          m_isDraggingObject = true;
          m_dragLastMouseX   = mouseX;
@@ -719,6 +726,9 @@ void CDrawingEngine::HandlePointerClick(int mouseX, int mouseY)
       int handleIdx = HitTestHandles(mouseX, mouseY, selIdx);
       if(handleIdx >= 0)
         {
+         //--- Keep locked handles hittable and selected, but consume clicks without arming a drag
+         if(selIdx >= 0 && m_drawnObjects[selIdx].locked)
+            return;
          //--- TREND_ANGLE special case: handle 0 (anchor 1) drags the whole object
          if(selIdx >= 0 &&
             m_drawnObjects[selIdx].toolType == TOOL_TREND_ANGLE &&
@@ -745,6 +755,13 @@ void CDrawingEngine::HandlePointerClick(int mouseX, int mouseY)
       //--- Update the selection if the click landed on a different object
       if(m_selectedObjectId != hitId)
          SelectObjectById(hitId);
+      //--- Locked objects select normally but cannot arm a whole-object drag
+      int hitIdx = FindObjectIndexById(hitId);
+      if(hitIdx >= 0 && m_drawnObjects[hitIdx].locked)
+        {
+         RedrawAllObjects();
+         return;
+        }
       //--- Arm the drag; release without movement degrades to a click-to-select
       m_isDraggingObject = true;
       m_dragLastMouseX   = mouseX;
@@ -772,6 +789,10 @@ void CDrawingEngine::HandlePointerDoubleClick(int mouseX, int mouseY)
    //--- Update the selection if the double-click landed on a different object
    if(m_selectedObjectId != hitId)
       SelectObjectById(hitId);
+   //--- Locked objects select normally but cannot arm a whole-object drag
+   int hitIdx = FindObjectIndexById(hitId);
+   if(hitIdx >= 0 && m_drawnObjects[hitIdx].locked)
+      return;
    //--- Arm a whole-object drag and lock chart scroll
    m_isDraggingObject = true;
    m_dragLastMouseX   = mouseX;
@@ -784,6 +805,21 @@ void CDrawingEngine::HandlePointerDoubleClick(int mouseX, int mouseY)
 //+------------------------------------------------------------------+
 void CDrawingEngine::HandlePointerDragMove(int mouseX, int mouseY)
   {
+   //--- A lock may be enabled while a drag is active; stop before any anchor mutation
+   if(m_selectedObjectId >= 0 &&
+      (m_isDraggingObject || m_isDraggingHandle || m_pendingTextEditArmed))
+     {
+      int selectedIdx = FindObjectIndexById(m_selectedObjectId);
+      if(selectedIdx >= 0 && m_drawnObjects[selectedIdx].locked)
+        {
+         m_isDraggingObject      = false;
+         m_isDraggingHandle      = false;
+         m_draggedHandleIdx      = -1;
+         m_pendingTextEditArmed  = false;
+         RedrawAllObjects();
+         return;
+        }
+     }
    //--- Whole-object drag path: shift every anchor by the (dt, dp) delta
    if(m_isDraggingObject && m_selectedObjectId >= 0)
      {
