@@ -1776,26 +1776,10 @@ void CDrawingEngine::RedrawAllObjects()
         }
       else if(m_previewToolType == TOOL_FIBO_RETRACEMENT)
         {
-         //--- Fibo Retracement preview: build canonical 11-level defaults matching post-commit
+         //--- Fibo Retracement preview: reuse the canonical committed-level preset
          double pRatio[];   color  pCol[];     int pOp[];
          int    pW[];       int    pS[];       bool pVis[];
-         const int N = 11;
-         ArrayResize(pRatio, N); ArrayResize(pCol, N);
-         ArrayResize(pOp,    N); ArrayResize(pW,   N);
-         ArrayResize(pS,     N); ArrayResize(pVis, N);
-         //--- Canonical Fibo Retracement default ratios and per-level colors
-         const double dr[] = {0.0, 0.236, 0.382, 0.5, 0.618, 0.786,
-                               1.0, 1.618, 2.618, 3.618, 4.236};
-         const color  dc[] = {clrGray,        clrCrimson,    clrOrange,
-                               clrGoldenrod,   clrSeaGreen,   clrDarkCyan,
-                               clrGray,        clrDodgerBlue, clrMediumOrchid,
-                               clrBlueViolet,  clrCrimson};
-         //--- Populate per-level style arrays uniformly (visible, width 2, solid)
-         for(int k = 0; k < N; k++)
-           {
-            pRatio[k] = dr[k]; pCol[k]   = dc[k]; pOp[k] = 100;
-            pW[k]     = 2;     pS[k]     = 0;     pVis[k] = true;
-           }
+         TP_FillFibRetracementPreset(pRatio,pCol,pOp,pW,pS,pVis);
          //--- Delegate to the main draw routine for pixel-perfect preview-commit match
          DrawFibRetracementOn(m_canvasDrawings, px1, py1,
                                m_previewMouseX, m_previewMouseY,

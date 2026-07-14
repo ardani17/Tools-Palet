@@ -307,6 +307,29 @@ Dibuka dari ikon gear di ribbon. Tab umum:
 
 **Koordinat:** edit angka di tab Coordinates → tekan Enter untuk commit.
 
+### Fibonacci Retracement: preset level
+
+Fibonacci Retracement baru memakai 24 ratio berikut, dalam urutan yang sama di
+Settings:
+
+`0`, `0.236`, `0.382`, `0.5`, `0.618`, `0.786`, `1`, `1.272`, `1.414`,
+`1.618`, `2`, `2.272`, `2.414`, `2.618`, `3`, `3.272`, `3.414`, `3.618`,
+`4`, `4.236`, `4.272`, `4.414`, `4.618`, `4.764`.
+
+Saat drawing dibuat, hanya enam level standar yang aktif: `0`, `0.382`, `0.5`,
+`0.618`, `1`, dan `1.618`. Untuk menampilkan atau menyembunyikan level lain,
+pilih drawing tersebut, buka **Settings** → tab **Levels**, lalu ubah toggle
+visibility pada level yang diinginkan. Setiap level dapat diaktifkan atau
+dinonaktifkan secara mandiri; pengaturan ratio dan style level tetap tersedia
+di tab yang sama.
+
+Untuk drawing Fibonacci Retracement yang dipulihkan dari file versi lama,
+upgrade preset ke 24 level dilakukan **satu kali** saat EA dimuat. Style level
+yang sudah cocok (warna, opacity, lebar, dan style garis) dipertahankan.
+Sesudah upgrade tersebut tersimpan, perubahan level dan visibility yang Anda
+buat secara manual akan tetap tersimpan normal saat EA di-attach ulang atau
+chart dimuat kembali.
+
 ---
 
 ## 8. Crosshair & pengukuran

@@ -507,7 +507,9 @@ int CDrawingEngine::HitTestAllObjects(int mouseX, int mouseY)
          case TOOL_FIBO_RETRACEMENT:
             hit = HitTestFibRetracement(mouseX,mouseY,
                                          m_canvasDrawings.Width(),
-                                         x1,y1,x2,y2, m_hitThreshold); break;
+                                         x1,y1,x2,y2, m_hitThreshold,
+                                         m_drawnObjects[i].fiboLevelRatio,
+                                         m_drawnObjects[i].fiboLevelVisible); break;
          case TOOL_FIBO_EXPANSION:
             hit = HitTestFibExpansion(mouseX,mouseY,
                                        m_canvasDrawings.Width(),

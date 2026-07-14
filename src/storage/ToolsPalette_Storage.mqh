@@ -6,7 +6,7 @@
 #define TOOLS_PALETTE_STORAGE_MQH
 
 //--- On-disk schema version (bump only on incompatible format changes)
-#define TP_DRAW_SCHEMA_VERSION 1
+#define TP_DRAW_SCHEMA_VERSION 2
 
 //+------------------------------------------------------------------+
 //| Per-chart file path: ToolsPalette\drawings\<Symbol>_<ChartID>   |
@@ -380,18 +380,18 @@ bool CDrawingEngine::RestoreDrawings()
 
    int    headerCounter = 0;
    int    maxId         = 0;
+   int    fileVersion   = 1;
    bool   inObj         = false;
    string keys[]; string vals[]; int kn = 0;
 
    while(!FileIsEnding(h))
      {
       string line = FileReadString(h);
-      if(line == "TPDRAW v=1") continue;
-      if(StringFind(line, "TPDRAW v=") == 0)
+      if(StringFind(line,"TPDRAW v=")==0)
         {
-         int ver = (int)StringToInteger(StringSubstr(line, 9));
-         if(ver > TP_DRAW_SCHEMA_VERSION)
-           { Print("ToolsPalette: drawing file schema v",ver," newer than supported; starting empty"); FileClose(h); return true; }
+         fileVersion=(int)StringToInteger(StringSubstr(line,9));
+         if(fileVersion>TP_DRAW_SCHEMA_VERSION)
+           { Print("ToolsPalette: drawing file schema v",fileVersion," newer than supported; starting empty"); FileClose(h); return true; }
          continue;
         }
       if(StringFind(line, "counter=") == 0)
@@ -417,6 +417,17 @@ bool CDrawingEngine::RestoreDrawings()
    //--- Restore counter so future IDs never collide with loaded ones
    m_drawnObjectCounter = MathMax(headerCounter, maxId);
    m_drawnObjectCount   = ArraySize(m_drawnObjects);
+   if(fileVersion<TP_FIBO_RETRACEMENT_PRESET_VERSION)
+     {
+      bool migrated=false;
+      for(int i=0;i<ArraySize(m_drawnObjects);i++)
+         if(m_drawnObjects[i].toolType==TOOL_FIBO_RETRACEMENT)
+           {
+            TP_MigrateFibRetracementPreset(m_drawnObjects[i]);
+            migrated=true;
+           }
+      if(migrated) MarkDrawingsDirty();
+     }
    return true;
   }
 
