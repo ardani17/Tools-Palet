@@ -5,6 +5,25 @@ Semua perubahan penting pada proyek **Tools Palette (MT5)** didokumentasikan di 
 Format mengikuti [Keep a Changelog](https://keepachangelog.com/id/1.1.0/),
 dan proyek ini memakai [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.2.0] - 2026-07-15
+
+### Added
+
+- **Fibonacci Retracement** kini menyediakan 24 level: `0`, `0.236`,
+  `0.382`, `0.5`, `0.618`, `0.786`, `1`, `1.272`, `1.414`, `1.618`, `2`,
+  `2.272`, `2.414`, `2.618`, `3`, `3.272`, `3.414`, `3.618`, `4`, `4.236`,
+  `4.272`, `4.414`, `4.618`, dan `4.764`.
+- Setiap level dapat diaktifkan atau dinonaktifkan manual melalui Settings.
+
+### Changed
+
+- Default Fibonacci Retracement dibuat ringkas: hanya `0`, `0.382`, `0.5`,
+  `0.618`, `1`, dan `1.618` yang tampil saat drawing baru dibuat.
+- Drawing Fibo Retracement tersimpan dari versi sebelumnya dimigrasikan sekali
+  ke preset terbaru; style pada level yang sama dipertahankan dan perubahan
+  manual berikutnya tetap tersimpan.
+- Preview dan pemilihan garis Fibo kini mengikuti level aktif pada drawing.
+
 ## [1.1.0] - 2026-07-14
 
 ### Added
@@ -61,5 +80,6 @@ di atas chart MetaTrader 5 (mirip TradingView), dirender ke canvas bitmap
   **compile 0 error/warning** + smoke test manual di chart.
 - Binary hasil compile (`*.ex5`) tidak di-track git.
 
+[1.2.0]: https://github.com/ardani17/Tools-Palet/releases/tag/v1.2.0
 [1.1.0]: https://github.com/ardani17/Tools-Palet/releases/tag/v1.1.0
 [1.0.0]: https://github.com/ardani17/Tools-Palet/releases/tag/v1.0.0
