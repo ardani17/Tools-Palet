@@ -6,10 +6,10 @@ Semua objek dirender ke **canvas bitmap** (`CCanvas`), bukan objek chart MT5 nat
 
 | | |
 |---|---|
-| **Versi** | 1.0.0 |
+| **Versi** | 1.1.0 |
 | **Bahasa** | MQL5 |
 | **Platform** | MetaTrader 5 (Windows) |
-| **Rilis** | [`v1.0.0`](https://github.com/ardani17/Tools-Palet/releases/tag/v1.0.0) |
+| **Rilis** | [`v1.1.0`](https://github.com/ardani17/Tools-Palet/releases/tag/v1.1.0) |
 
 ## Fitur utama
 

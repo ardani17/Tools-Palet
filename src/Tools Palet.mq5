@@ -5,7 +5,7 @@
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2026, Om J."
 #property link "https://t.me/HZFXI"
-#property version "1.00"
+#property version "1.10"
 #property strict
 
 //--- Pull in the sidebar shell header that defines the CToolsSidebar class
