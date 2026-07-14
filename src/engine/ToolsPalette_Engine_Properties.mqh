@@ -1370,6 +1370,8 @@ bool CDrawingEngine::SetObjectPointPrice(int objId, int pointIdx, double newPric
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
+   //--- Locked drawings cannot have anchor prices changed by Settings controls
+   if(m_drawnObjects[idx].locked) return false;
    //--- Dispatch by tool type + track whether the write actually landed (drives the redraw)
    const TOOL_TYPE t = m_drawnObjects[idx].toolType;
    bool ok = false;
@@ -1404,6 +1406,8 @@ bool CDrawingEngine::SetObjectPointTime(int objId, int pointIdx, datetime newTim
    //--- Resolve the object's array index by ID; bail on unknown ID
    int idx = FindObjectIndexById(objId);
    if(idx < 0) return false;
+   //--- Locked drawings cannot have anchor times changed by Settings controls
+   if(m_drawnObjects[idx].locked) return false;
    //--- Dispatch by tool type + track whether the write actually landed (drives the redraw)
    const TOOL_TYPE t = m_drawnObjects[idx].toolType;
    bool ok = false;
